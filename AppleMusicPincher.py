@@ -42,25 +42,12 @@ def rec_stop():
     global recording, stream, fName, frames
     if recording:
         recording = False
-        print("Recording stopped.")
-        print("Test Point 1")
-        print(type(frames))
         frames_bytes = b"".join(frames)
-        print(type(frames_bytes))
-        print(len(frames_bytes))
-        print("Test Point 2")
         wf = wave.open(fName, "wb")
-        print("hello?")
-        print(type(frames_bytes))
         wf.setnchannels(2)
-        print("hello??")
         wf.setsampwidth(3)  # Bytes per sample for 24-bit audio
-        print("hello???")
         wf.setframerate(44100)
-        print("hello????")
-        print(len(frames_bytes))
         wf.writeframes(frames_bytes)
-        print("Test Point 3")
         wf.close()
 
 def song_has_started(song_id, artist_name, album_name, song_name):
@@ -79,7 +66,11 @@ chunk = 512  # Adjust chunk size as needed
 fName = None
 
 deviceNo = 0
-deviceNo = 38
+for i in range(pyaudio.PyAudio().get_device_count()):
+    print(str(i) + ' ' + pyaudio.PyAudio().get_device_info_by_index(i)["name"])
+
+deviceNo = int(input("Enter the index of the desired input device: "))
+
 song_id = 0
 current_track_data = None
 stream = pyaudio.PyAudio().open(
