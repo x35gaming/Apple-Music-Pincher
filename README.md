@@ -21,13 +21,15 @@ This Python script is a lifesaver for music lovers who:
 - Error handling and feedback for a user-friendly experience
 ## Getting started:
 
-- Install Python, iTunes, VoiceMeeter and PyAudio library.
+- Install Python, iTunes and VoiceMeeter.
+- run `pip install threading PyAudio wave`
 - Clone the Apple-Music-Pincher repo.
-- mute *all* applications except iTunes and VoiceMeeter.
-- open iTunes
-- double click or execute .\run.bat 
-- enter the index for your voicemeeter's virtual mic output...
-- the script will complain about a specific error, but just hit play on itunes.
+- Configure VoiceMeeter to send system audio to virtual output.
+- Mute *all* applications except iTunes and VoiceMeeter.
+- Open iTunes.
+- Double click or execute `.\run.bat`
+- Enter the index for your VoiceMeeter's / loopback's virtual mic output.
+- Hit play on itunes.
 - wait about 8 hours...
 ## Additional notes:
 
