@@ -6,49 +6,61 @@
 # Only works on Windows
 
 import win32com.client
-#import time
+import time
 import pyaudio
 import wave
-import concurrent.futures
-frames = []
+import threading
+
+def checkLoop():
+    global itunes, recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name, track_data
+    while True:
+        while recording:
+            data = stream.read(chunk)
+            frames.append(data)
+
 
 def rec_start_thread(filename):
-    global recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name
+    global recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name, track_data, checkThread
     fName = filename
     if not recording:
         recording = True
         print(f"Recording started to '{filename}'...")
         print(str(deviceNo))
         frames = []
-        while recording:
-            data = stream.read(chunk)
-            frames.append(data)
-            track = itunes.currentTrack
-            track_data = (track.Name, track.Artist, track.Album)  # Combine properties
+    while recording:
+        track = itunes.currentTrack
+        track_data = (track.Name, track.Artist, track.Album)  # Combine properties    
+        if track_data != current_track_data:
+            if current_track_data is not None:
+                song_has_ended()
 
-            if track_data != current_track_data:
-                if current_track_data is not None:
-                    song_has_ended()
 
-                current_track_data = track_data
-                artist_name = track.Artist
-                album_name = track.Album
-                song_name = track.Name
-                song_id = song_id + 1
-                #pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
-                song_has_started(song_id, artist_name, album_name, song_name)
+            #current_track_data = track_data
+            #artist_name = track.Artist
+            #album_name = track.Album
+            #song_name = track.Name
+            #song_id = song_id + 1
+            #song_has_started(song_id, artist_name, album_name, song_name)
+        time.sleep(0.5)  # Check frequently
+
+
+        
 
 def rec_stop():
     global recording, stream, fName, frames
     if recording:
         recording = False
+        #checkThread.join()
         frames_bytes = b"".join(frames)
+        print(len(frames))
         wf = wave.open(fName, "wb")
         wf.setnchannels(2)
         wf.setsampwidth(3)  # Bytes per sample for 24-bit audio
         wf.setframerate(44100)
         wf.writeframes(frames_bytes)
         wf.close()
+    #Process(target=loop_a).kill()
+    #Process(target=loop_b).kill()
 
 def song_has_started(song_id, artist_name, album_name, song_name):
     print(f"Song has started:.\songs\{song_id} - {song_name} by {artist_name} from {album_name}.wav")
@@ -61,18 +73,21 @@ def song_has_ended():
     rec_stop()
 
 itunes = win32com.client.Dispatch("iTunes.Application")
-recording = False
+
 chunk = 512  # Adjust chunk size as needed
 fName = None
+recording = False
+deviceNo = 38
 
-deviceNo = 0
-for i in range(pyaudio.PyAudio().get_device_count()):
-    print(str(i) + ' ' + pyaudio.PyAudio().get_device_info_by_index(i)["name"])
-
-deviceNo = int(input("Enter the index of the desired input device: "))
-
+checkThread = threading.Thread(target=checkLoop)
 song_id = 0
 current_track_data = None
+
+frames = []
+for i in range(pyaudio.PyAudio().get_device_count()):
+    print(str(i) + ' ' + pyaudio.PyAudio().get_device_info_by_index(i)["name"])
+deviceNo = int(input('Enter the index of the desired input device: ').strip() or "38")
+
 stream = pyaudio.PyAudio().open(
     format=pyaudio.paInt24,  # 24-bit audio
     channels=2,  # Stereo
@@ -81,6 +96,7 @@ stream = pyaudio.PyAudio().open(
     input_device_index=deviceNo,
     frames_per_buffer=chunk
 )
+checkThread.start()
 while True:
     try:
         track = itunes.currentTrack
