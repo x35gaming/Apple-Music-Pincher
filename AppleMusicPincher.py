@@ -6,17 +6,28 @@
 # Only works on Windows
 
 import win32com.client
-import time
 import pyaudio
 import wave
 import threading
 
 def checkLoop():
-    global itunes, recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name, track_data
+    global frames_bytes, itunes, recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name, track_data
+    stream = pyaudio.PyAudio().open(
+        format=pyaudio.paInt24,  # 24-bit audio
+        channels=2,  # Stereo
+        rate=44100,
+        input=True,
+        input_device_index=deviceNo,
+        frames_per_buffer=chunk
+    )
     while True:
-        while recording:
-            data = stream.read(chunk)
-            frames.append(data)
+        if recording:
+            frames = []
+            while recording:
+                data = stream.read(chunk)
+                frames.append(data)
+
+        
 
 
 def rec_start_thread(filename):
@@ -41,18 +52,17 @@ def rec_start_thread(filename):
             #song_name = track.Name
             #song_id = song_id + 1
             #song_has_started(song_id, artist_name, album_name, song_name)
-        time.sleep(0.5)  # Check frequently
 
 
         
 
 def rec_stop():
-    global recording, stream, fName, frames
+    global frames_bytes, recording, stream, fName, frames
     if recording:
         recording = False
         #checkThread.join()
-        frames_bytes = b"".join(frames)
         print(len(frames))
+        frames_bytes = b"".join(frames)
         wf = wave.open(fName, "wb")
         wf.setnchannels(2)
         wf.setsampwidth(3)  # Bytes per sample for 24-bit audio
@@ -74,7 +84,7 @@ def song_has_ended():
 
 itunes = win32com.client.Dispatch("iTunes.Application")
 
-chunk = 512  # Adjust chunk size as needed
+chunk = 2048  # Adjust chunk size as needed
 fName = None
 recording = False
 deviceNo = 38
@@ -88,14 +98,7 @@ for i in range(pyaudio.PyAudio().get_device_count()):
     print(str(i) + ' ' + pyaudio.PyAudio().get_device_info_by_index(i)["name"])
 deviceNo = int(input('Enter the index of the desired input device: ').strip() or "38")
 
-stream = pyaudio.PyAudio().open(
-    format=pyaudio.paInt24,  # 24-bit audio
-    channels=2,  # Stereo
-    rate=44100,
-    input=True,
-    input_device_index=deviceNo,
-    frames_per_buffer=chunk
-)
+
 checkThread.start()
 while True:
     try:
