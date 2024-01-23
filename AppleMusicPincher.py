@@ -9,6 +9,7 @@ import win32com.client
 import pyaudio
 import wave
 import threading
+from textwrap import shorten
 
 def checkLoop():
     global frames_bytes, itunes, recording, stream, fName, frames, deviceNo, current_track_data, itunes, song_id, artist_name, album_name, song_name, track_data
@@ -73,9 +74,9 @@ def rec_stop():
     #Process(target=loop_b).kill()
 
 def song_has_started(song_id, artist_name, album_name, song_name):
-    print(f"Song has started:.\songs\{song_id} - {song_name} by {artist_name} from {album_name}.wav")
+    print(shorten("Song has started:" + f".\songs\{song_id} - {artist_name} - {song_name} - {album_name}",58)+".wav")
     #pool.submit(rec_start_thread,(f"{song_id} - {song_name} by {artist_name} from {album_name}.wav",))
-    rec_start_thread(f".\songs\{song_id} - {song_name} by {artist_name} from {album_name}.wav")
+    rec_start_thread(shorten(f".\songs\{song_id} - {artist_name} - {song_name} - {album_name}",58)+".wav")
 
 def song_has_ended():
     #global recording_thread
