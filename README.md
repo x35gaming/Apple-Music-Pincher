@@ -1,4 +1,6 @@
 # Apple-Music-Pincher: Record iTunes songs on the fly
+*Note: if this program acts weirdly, or this README seems incoherent, blame the AI that wrote it...*
+
 Tired of DRM restrictions preventing you from saving your favorite iTunes tracks? Apple-Music-Pincher cracks the code (sort of) by playing and then recording your music, ensuring you have a high-quality, DRM-free copy in no time.
 
 This Python script is a lifesaver for music lovers who:
@@ -22,7 +24,7 @@ This Python script is a lifesaver for music lovers who:
 ## Getting started:
 
 - Install Python, iTunes and VoiceMeeter.
-- run `pip install threading PyAudio wave`
+- run `pip install pywin32 pyaudio`
 - Clone the Apple-Music-Pincher repo.
 - Configure VoiceMeeter to send system audio to virtual output.
 - Mute *all* applications except iTunes and VoiceMeeter.
