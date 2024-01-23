@@ -119,7 +119,8 @@ while True:
 
         #time.sleep(0.5)  # Check frequently
     except Exception as e:
-        print(f"Error: {e}")
+        if recording:
+            song_has_ended()
         #time.sleep(5)  # Retry after a delay
 
 stream.stop_stream()
