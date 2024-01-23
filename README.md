@@ -21,11 +21,13 @@ This Python script is a lifesaver for music lovers who:
 - Error handling and feedback for a user-friendly experience
 ## Getting started:
 
-- Install Python and PyAudio library.
+- Install Python, iTunes, VoiceMeeter and PyAudio library.
 - Download the Apple-Music-Pincher script.
-- Configure your preferred audio input device and chunk size.
 - turn off system sounds or you'll be having a bad day...
+- open iTunes
 - run `python .\AppleMusicPincher.py`
+- enter the index for your voicemeeter's virtual mic output...
+- the script will complain about a specific error, but just hit play on itunes.
 - wait about 8 hours...
 ## Additional notes:
 
