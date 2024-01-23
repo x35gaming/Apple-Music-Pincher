@@ -22,10 +22,10 @@ This Python script is a lifesaver for music lovers who:
 ## Getting started:
 
 - Install Python, iTunes, VoiceMeeter and PyAudio library.
-- Download the Apple-Music-Pincher script.
-- turn off system sounds or you'll be having a bad day...
+- Clone the Apple-Music-Pincher repo.
+- mute *all* applications except iTunes and VoiceMeeter.
 - open iTunes
-- run `python .\AppleMusicPincher.py`
+- double click or execute .\run.bat 
 - enter the index for your voicemeeter's virtual mic output...
 - the script will complain about a specific error, but just hit play on itunes.
 - wait about 8 hours...
